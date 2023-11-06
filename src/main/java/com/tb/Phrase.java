@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Phrase {
 	@Getter
+	@Setter
 	private int id;
 	@Getter
 	@Setter
