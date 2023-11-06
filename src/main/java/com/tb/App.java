@@ -29,6 +29,8 @@ public class App {
 				getList();
 			} else if (cmd.contains("삭제")) {
 				removePhrase(cmd);
+			} else if (cmd.contains("수정")) {
+				modifyPhrase(cmd);
 			}
 		}
 	}
@@ -60,6 +62,23 @@ public class App {
 				return;
 			}
 		}
-		System.out.println(id + "번 명령이 존재하지 않습니다.");
+		System.out.println(id + "번 명언은 존재하지 않습니다.");
+	}
+
+	private void modifyPhrase(String cmd) {
+		String idStr = cmd.replace("수정?id=", "");
+		int id = Integer.parseInt(idStr);
+		for (Phrase o: list) {
+			if (o.getId() == id) {
+				System.out.println("명언(기존): " + o.getContent());
+				System.out.print("명언: ");
+				o.setContent(sc.nextLine());
+				System.out.println("작가(기존): " + o.getAuthor());
+				System.out.print("작가: ");
+				o.setAuthor(sc.nextLine());
+				return;
+			}
+		}
+		System.out.println(id + "번 명언은 존재하지 않습니다.");
 	}
 }
