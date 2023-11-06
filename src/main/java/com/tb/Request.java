@@ -1,18 +1,16 @@
 package com.tb;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Request {
 	String cmd;
 	String action;
 	String queryString;
-	List<String> paramNames;
-	List<String> paramValues;
+	Map<String, String> params;
 
 	Request(String cmd) {
-		paramNames = new ArrayList<>();
-		paramValues = new ArrayList<>();
+		params = new HashMap<>();
 
 		this.cmd = cmd;
 
@@ -31,8 +29,7 @@ public class Request {
 			String paramName = queryParamStrBits[0];
 			String paramValue = queryParamStrBits[1];
 
-			paramNames.add(paramName);
-			paramValues.add(paramValue);
+			params.put(paramName, paramValue);
 		}
 	}
 
@@ -41,16 +38,15 @@ public class Request {
 	}
 
 	public int getParamAsInt(String paramName, int defaultValue) {
-		int index = paramNames.indexOf(paramName);
+		String value = params.get(paramName);
 
-		if (index == -1) return defaultValue;
-
-		String paramValue = paramValues.get(index);
-
-		try {
-			return Integer.parseInt(paramValue);
-		} catch (NumberFormatException e) {
-			return defaultValue;
+		if (value != null) {
+			try {
+				return Integer.parseInt(value);
+			} catch (NumberFormatException e) {
+				return defaultValue;
+			}
 		}
+		return defaultValue;
 	}
 }
