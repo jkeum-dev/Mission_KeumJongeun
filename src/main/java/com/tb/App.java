@@ -27,9 +27,9 @@ public class App {
 				addPhrase();
 			} else if (cmd.equals("목록")) {
 				getList();
-			} else if (cmd.contains("삭제")) {
+			} else if (cmd.startsWith("삭제?")) {
 				removePhrase(cmd);
-			} else if (cmd.contains("수정")) {
+			} else if (cmd.startsWith("수정?")) {
 				modifyPhrase(cmd);
 			}
 		}
@@ -53,8 +53,11 @@ public class App {
 	}
 
 	private void removePhrase(String cmd) {
-		String idStr = cmd.replace("삭제?id=", "");
-		int id = Integer.parseInt(idStr);
+		int id = getParamId(cmd);
+		if (id == 0) {
+			System.out.println("id 값을 정확히 입력해주세요.");
+			return;
+		}
 		for (Phrase o: list) {
 			if (o.getId() == id) {
 				list.remove(o);
@@ -66,8 +69,11 @@ public class App {
 	}
 
 	private void modifyPhrase(String cmd) {
-		String idStr = cmd.replace("수정?id=", "");
-		int id = Integer.parseInt(idStr);
+		int id = getParamId(cmd);
+		if (id == 0) {
+			System.out.println("id 값을 정확히 입력해주세요.");
+			return;
+		}
 		for (Phrase o: list) {
 			if (o.getId() == id) {
 				System.out.println("명언(기존): " + o.getContent());
@@ -80,5 +86,23 @@ public class App {
 			}
 		}
 		System.out.println(id + "번 명언은 존재하지 않습니다.");
+	}
+
+	private int getParamId(String str) {
+		// 삭제?id=2&dd=ss&ll=aa
+		String[] queryStr = str.split("\\?", 2); // cmdQuery: 삭제 | id=2&dd=ss&ll=aa
+		String cmd = queryStr[0]; // cmd: 삭제
+		String[] params = queryStr[1].split("&"); // params: id=2 | dd=ss | ll=aa
+		for (String param: params) {
+			String[] pair = param.split("=", 2);
+			if (pair[0].equals("id")) {
+				try {
+					return Integer.parseInt(pair[1]);
+				} catch (NumberFormatException e) {
+					return 0;
+				}
+			}
+		}
+		return 0;
 	}
 }
