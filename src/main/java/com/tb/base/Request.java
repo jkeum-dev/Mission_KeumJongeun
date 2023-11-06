@@ -1,4 +1,4 @@
-package com.tb;
+package com.tb.base;
 
 import java.util.HashMap;
 import java.util.Map;

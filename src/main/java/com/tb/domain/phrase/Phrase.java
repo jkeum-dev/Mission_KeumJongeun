@@ -1,4 +1,4 @@
-package com.tb;
+package com.tb.domain.phrase;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
