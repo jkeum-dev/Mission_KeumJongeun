@@ -27,6 +27,8 @@ public class App {
 				addPhrase();
 			} else if (cmd.equals("목록")) {
 				getList();
+			} else if (cmd.contains("삭제")) {
+				removePhrase(cmd);
 			}
 		}
 	}
@@ -46,5 +48,18 @@ public class App {
 		System.out.println("번호 / 작가 / 명언\n" + "----------------------");
 		for (Phrase o: list)
 			System.out.println(o.getId() + " / " + o.getAuthor() + " / " + o.getContent());
+	}
+
+	private void removePhrase(String cmd) {
+		String idStr = cmd.replace("삭제?id=", "");
+		int id = Integer.parseInt(idStr);
+		for (Phrase o: list) {
+			if (o.getId() == id) {
+				list.remove(o);
+				System.out.println(id + "번 명언이 삭제되었습니다.");
+				return;
+			}
+		}
+		System.out.println(id + "번 명령이 존재하지 않습니다.");
 	}
 }
