@@ -20,17 +20,14 @@ public class App {
 		while (true) {
 			System.out.print("명령) ");
 			String cmd = sc.nextLine();
-			if (cmd.equals("종료")) {
-				sc.close();
-				System.exit(0);
-			} else if (cmd.equals("등록")) {
-				addPhrase();
-			} else if (cmd.equals("목록")) {
-				getList();
-			} else if (cmd.startsWith("삭제?")) {
-				removePhrase(cmd);
-			} else if (cmd.startsWith("수정?")) {
-				modifyPhrase(cmd);
+			Request rq = new Request(cmd);
+
+			switch (rq.getAction()) {
+				case "종료": sc.close(); return;
+				case "등록": addPhrase(); break;
+				case "목록": getList(); break;
+				case "삭제": removePhrase(rq); break;
+				case "수정": modifyPhrase(rq); break;
 			}
 		}
 	}
@@ -52,8 +49,8 @@ public class App {
 			System.out.println(o.getId() + " / " + o.getAuthor() + " / " + o.getContent());
 	}
 
-	private void removePhrase(String cmd) {
-		int id = getParamId(cmd);
+	private void removePhrase(Request rq) {
+		int id = rq.getParamAsInt("id", 0);
 		if (id == 0) {
 			System.out.println("id 값을 정확히 입력해주세요.");
 			return;
@@ -68,8 +65,8 @@ public class App {
 		System.out.println(id + "번 명언은 존재하지 않습니다.");
 	}
 
-	private void modifyPhrase(String cmd) {
-		int id = getParamId(cmd);
+	private void modifyPhrase(Request rq) {
+		int id = rq.getParamAsInt("id", 0);
 		if (id == 0) {
 			System.out.println("id 값을 정확히 입력해주세요.");
 			return;
@@ -86,23 +83,5 @@ public class App {
 			}
 		}
 		System.out.println(id + "번 명언은 존재하지 않습니다.");
-	}
-
-	private int getParamId(String str) {
-		// 삭제?id=2&dd=ss&ll=aa
-		String[] queryStr = str.split("\\?", 2); // cmdQuery: 삭제 | id=2&dd=ss&ll=aa
-		String cmd = queryStr[0]; // cmd: 삭제
-		String[] params = queryStr[1].split("&"); // params: id=2 | dd=ss | ll=aa
-		for (String param: params) {
-			String[] pair = param.split("=", 2);
-			if (pair[0].equals("id")) {
-				try {
-					return Integer.parseInt(pair[1]);
-				} catch (NumberFormatException e) {
-					return 0;
-				}
-			}
-		}
-		return 0;
 	}
 }
