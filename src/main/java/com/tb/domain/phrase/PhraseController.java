@@ -46,15 +46,17 @@ public class PhraseController {
 		System.out.println("번호 / 작가 / 명언\n" + "----------------------");
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 			String line;
+			int id = lastId;
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split(",");
 				if (parts.length >= 3) {
-					int id = Integer.parseInt(parts[0].trim());
+					id = Integer.parseInt(parts[0].trim());
 					String content = parts[1].trim();
 					String author = parts[2].trim();
 					System.out.println(id + " / " + author + " / " + content);
 				}
 			}
+			lastId = id;
 		} catch (IOException e) {
 			System.err.println("파일 읽기 중 오류 발생: " + e.getMessage());
 		}
