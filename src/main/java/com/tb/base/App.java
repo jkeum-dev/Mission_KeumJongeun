@@ -1,6 +1,7 @@
 package com.tb.base;
 
 import com.tb.domain.phrase.PhraseController;
+
 import java.util.Scanner;
 
 public class App {
