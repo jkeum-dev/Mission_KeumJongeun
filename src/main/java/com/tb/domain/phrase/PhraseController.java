@@ -1,23 +1,27 @@
 package com.tb.domain.phrase;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tb.base.Request;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Scanner;
 
 public class PhraseController {
 	private final Scanner sc;
 	private int lastId;
 	private List<Phrase> list;
-	private String filePath; // 파일 경로 지정
+	private String filePath;
+	private ObjectMapper objectMapper = new ObjectMapper();
 
 	public PhraseController(Scanner _sc) {
 		this.sc = _sc;
 		this.lastId = 0;
 		this.list = new ArrayList<>();
-		this.filePath = "src/main/resources/phrase.txt";
+		this.filePath = "src/main/resources/data.json";
 	}
 
 	public void addPhrase() {
@@ -29,36 +33,24 @@ public class PhraseController {
 		ph.setId(++lastId);
 		list.add(ph);
 		System.out.println(ph.getId() + "번 명령이 등록되었습니다.");
-		writePhraseToFile(ph);
-	}
-
-	private void writePhraseToFile(Phrase phrase) {
-		// BufferedWriter와 FileWriter를 사용하여 파일에 쓰기
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-			writer.write(phrase.getId() + "," + phrase.getContent() + "," + phrase.getAuthor());
-			writer.newLine(); // 다음 입력을 위한 줄바꿈
-		} catch (IOException e) {
-			System.err.println("파일 쓰기 중 오류 발생: " + e.getMessage());
-		}
 	}
 
 	public void getList() {
 		System.out.println("번호 / 작가 / 명언\n" + "----------------------");
-		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-			String line;
-			int id = lastId;
-			while ((line = reader.readLine()) != null) {
-				String[] parts = line.split(",");
-				if (parts.length >= 3) {
-					id = Integer.parseInt(parts[0].trim());
-					String content = parts[1].trim();
-					String author = parts[2].trim();
-					System.out.println(id + " / " + author + " / " + content);
-				}
-			}
-			lastId = id;
+		if (list.isEmpty()) {
+			// 프로그램 실행하고 데이터를 등록하기 전에는 list가 비어있음. 이때는 파일만 읽어와야 함.
+			getListFromFile();
+			lastId = list.stream().mapToInt(Phrase::getId).max().orElse(0);
+		}
+		for (Phrase phrase : list)
+			System.out.println(phrase.getId() + " / " + phrase.getAuthor() + " / " + phrase.getContent());
+	}
+
+	private void getListFromFile() {
+		// data.json 파일 읽어서 list에 추가하기
+		try {
+			list = objectMapper.readValue(new File(filePath), new TypeReference<List<Phrase>>(){});
 		} catch (IOException e) {
-			System.err.println("파일 읽기 중 오류 발생: " + e.getMessage());
 		}
 	}
 
@@ -96,5 +88,14 @@ public class PhraseController {
 			}
 		}
 		System.out.println(id + "번 명언은 존재하지 않습니다.");
+	}
+
+	public void buildData(Request rq) {
+		// list에 있는 데이터를 data.json에 새로 쓰기.(기존 파일 존재하면 덮어쓰기. 추가X)
+		try {
+			objectMapper.writeValue(new File(filePath), list);
+			System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+		} catch (Exception e) {
+		}
 	}
 }

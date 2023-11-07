@@ -25,6 +25,7 @@ public class App {
 				case "목록": phraseController.getList(); break;
 				case "삭제": phraseController.removePhrase(rq); break;
 				case "수정": phraseController.modifyPhrase(rq); break;
+				case "빌드": phraseController.buildData(rq); break;
 			}
 		}
 	}
