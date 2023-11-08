@@ -15,6 +15,10 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    // 테스트 환경에서도 롬복 사용
+    testImplementation 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 }
 
 test {
