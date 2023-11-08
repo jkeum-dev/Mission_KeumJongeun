@@ -21,7 +21,7 @@ public class SimpleDbTest {
 
 	@BeforeAll
 	public void beforeAll() {
-		simpleDb = new SimpleDb("localhost", "root", "", "simpleDb__test");
+		simpleDb = new SimpleDb("localhost", "root", "lldj123414", "simpleDb__test");
 		simpleDb.setDevMode(true);
 
 		createArticleTable();
