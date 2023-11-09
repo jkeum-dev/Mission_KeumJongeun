@@ -13,6 +13,8 @@ public class App {
 
 	public void run() {
 		PhraseController phraseController = new PhraseController(sc);
+		phraseController.getListFromFile();
+
 		System.out.println("== 명언 앱 ==");
 		while (true) {
 			System.out.print("명령) ");
