@@ -24,7 +24,6 @@ public class PhraseController {
 	}
 
 	public void addPhrase() {
-		getListFromFile();
 		Phrase ph = new Phrase();
 		System.out.print("명언: ");
 		ph.setContent(sc.nextLine());
@@ -32,20 +31,16 @@ public class PhraseController {
 		ph.setAuthor(sc.nextLine());
 		ph.setId(++lastId);
 		list.add(ph);
-		System.out.println(ph.getId() + "번 명령이 등록되었습니다.");
+		System.out.println(ph.getId() + "번 명언이 등록되었습니다.");
 	}
 
 	public void getList() {
 		System.out.println("번호 / 작가 / 명언\n" + "----------------------");
-		if (list.isEmpty()) {
-			// 프로그램 실행하고 데이터를 등록하기 전에는 list가 비어있음. 이때는 파일만 읽어와야 함.
-			getListFromFile();
-		}
 		for (Phrase phrase : list)
 			System.out.println(phrase.getId() + " / " + phrase.getAuthor() + " / " + phrase.getContent());
 	}
 
-	private void getListFromFile() {
+	public void getListFromFile() {
 		// data.json 파일 읽어서 list에 추가하기
 		try {
 			list = objectMapper.readValue(new File(filePath), new TypeReference<List<Phrase>>(){});
